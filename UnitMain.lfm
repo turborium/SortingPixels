@@ -1,0 +1,461 @@
+object FormMain: TFormMain
+  Left = 519
+  Height = 864
+  Top = 250
+  Width = 1410
+  BorderWidth = 4
+  Caption = 'Sorting Pixels'
+  ClientHeight = 864
+  ClientWidth = 1410
+  Constraints.MinHeight = 600
+  Constraints.MinWidth = 1410
+  DesignTimePPI = 154
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  object ScrollBoxDisp: TScrollBox
+    Left = 12
+    Height = 686
+    Top = 12
+    Width = 1386
+    HorzScrollBar.Page = 224
+    HorzScrollBar.Tracking = True
+    VertScrollBar.Page = 208
+    VertScrollBar.Tracking = True
+    Align = alClient
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    ClientHeight = 682
+    ClientWidth = 1382
+    TabOrder = 0
+    object ImageDisp: TImage
+      AnchorSideLeft.Control = ScrollBoxDisp
+      AnchorSideTop.Control = ScrollBoxDisp
+      Left = 0
+      Height = 208
+      Top = 0
+      Width = 224
+    end
+  end
+  object PanelParams: TPanel
+    Left = 12
+    Height = 146
+    Top = 706
+    Width = 1386
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ClientHeight = 146
+    ClientWidth = 1386
+    TabOrder = 1
+    object PanelFile: TPanel
+      Left = 0
+      Height = 146
+      Top = 0
+      Width = 143
+      AutoSize = True
+      BevelOuter = bvNone
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ClientHeight = 146
+      ClientWidth = 143
+      TabOrder = 0
+      object ButtonOpen: TButton
+        Left = 0
+        Height = 39
+        Top = 6
+        Width = 143
+        AutoSize = True
+        BorderSpacing.InnerBorder = 2
+        Caption = 'Open'
+        TabOrder = 0
+        OnClick = ButtonOpenClick
+      end
+      object ButtonOpenSample: TButton
+        Left = 0
+        Height = 39
+        Top = 51
+        Width = 143
+        AutoSize = True
+        BorderSpacing.Top = 4
+        BorderSpacing.InnerBorder = 2
+        Caption = 'Open Sample'
+        TabOrder = 1
+        OnClick = ButtonOpenSampleClick
+      end
+      object ButtonSave: TButton
+        Left = 0
+        Height = 39
+        Top = 96
+        Width = 143
+        AutoSize = True
+        BorderSpacing.Top = 4
+        BorderSpacing.InnerBorder = 2
+        Caption = 'Save'
+        TabOrder = 2
+        OnClick = ButtonSaveClick
+      end
+    end
+    object GroupBoxTrashhold: TGroupBox
+      Left = 159
+      Height = 146
+      Top = 0
+      Width = 402
+      BorderSpacing.Left = 16
+      Caption = 'Trashhold'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 3
+      ClientHeight = 116
+      ClientWidth = 398
+      TabOrder = 1
+      object LabelThresholdMinCaption: TLabel
+        Left = 4
+        Height = 40
+        Top = 11
+        Width = 50
+        BorderSpacing.Left = 4
+        Caption = 'Min:'
+        Constraints.MinWidth = 50
+        Layout = tlCenter
+      end
+      object TrackBarThresholdMin: TTrackBar
+        AnchorSideLeft.Side = asrBottom
+        Left = 54
+        Height = 40
+        Top = 11
+        Width = 300
+        AutoSize = True
+        Frequency = 16
+        Max = 255
+        OnChange = TrackBarThresholdMinChange
+        PageSize = 1
+        Position = 0
+        ShowSelRange = False
+        BorderSpacing.Right = 4
+        Constraints.MinWidth = 300
+        TabOrder = 0
+      end
+      object LabelThresholdMin: TLabel
+        Left = 358
+        Height = 40
+        Top = 11
+        Width = 40
+        Caption = '255'
+        Constraints.MaxWidth = 40
+        Constraints.MinWidth = 40
+        Layout = tlCenter
+      end
+      object LabelThresholdMaxCaption: TLabel
+        Left = 4
+        Height = 40
+        Top = 62
+        Width = 50
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        Caption = 'Max:'
+        Constraints.MinWidth = 50
+        Layout = tlCenter
+      end
+      object TrackBarThresholdMax: TTrackBar
+        AnchorSideLeft.Side = asrBottom
+        Left = 54
+        Height = 40
+        Top = 62
+        Width = 300
+        AutoSize = True
+        Frequency = 16
+        Max = 255
+        OnChange = TrackBarThresholdMaxChange
+        PageSize = 1
+        Position = 255
+        ShowSelRange = False
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Constraints.MinWidth = 300
+        TabOrder = 1
+      end
+      object LabelThresholdMax: TLabel
+        Left = 358
+        Height = 40
+        Top = 62
+        Width = 40
+        Caption = '255'
+        Constraints.MaxWidth = 40
+        Constraints.MinWidth = 40
+        Layout = tlCenter
+      end
+    end
+    object GroupBoxSortDirection: TGroupBox
+      Left = 565
+      Height = 146
+      Top = 0
+      Width = 324
+      BorderSpacing.Left = 4
+      Caption = 'Sort Direction'
+      ChildSizing.EnlargeHorizontal = crsHomogenousSpaceResize
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ClientHeight = 116
+      ClientWidth = 320
+      TabOrder = 2
+      object PanelSortDirection: TPanel
+        Left = 4
+        Height = 105
+        Top = 6
+        Width = 312
+        AutoSize = True
+        BorderSpacing.Left = 4
+        BorderSpacing.Right = 4
+        BevelOuter = bvNone
+        ClientHeight = 105
+        ClientWidth = 312
+        TabOrder = 0
+        object BitBtnUp: TBitBtn
+          AnchorSideLeft.Control = BitBtnLeft
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = PanelSortDirection
+          Left = 104
+          Height = 35
+          Top = 0
+          Width = 104
+          AutoSize = True
+          Caption = 'Up'
+          Constraints.MaxWidth = 104
+          Constraints.MinWidth = 104
+          Margin = 4
+          Images = ImageListSortDirection
+          ImageIndex = 1
+          OnClick = BitBtnUpClick
+          TabOrder = 1
+        end
+        object BitBtnDown: TBitBtn
+          AnchorSideLeft.Control = BitBtnLeft
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = BitBtnLeft
+          AnchorSideTop.Side = asrBottom
+          Left = 104
+          Height = 35
+          Top = 70
+          Width = 104
+          AutoSize = True
+          Caption = 'Down'
+          Constraints.MaxWidth = 104
+          Constraints.MinWidth = 104
+          Margin = 4
+          Images = ImageListSortDirection
+          ImageIndex = 3
+          OnClick = BitBtnDownClick
+          TabOrder = 3
+        end
+        object BitBtnRight: TBitBtn
+          AnchorSideLeft.Control = BitBtnUp
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = BitBtnUp
+          AnchorSideTop.Side = asrBottom
+          Left = 208
+          Height = 35
+          Top = 35
+          Width = 104
+          AutoSize = True
+          Caption = 'Right'
+          Constraints.MaxWidth = 104
+          Constraints.MinWidth = 104
+          Margin = 4
+          Images = ImageListSortDirection
+          ImageIndex = 2
+          OnClick = BitBtnRightClick
+          TabOrder = 2
+        end
+        object BitBtnLeft: TBitBtn
+          AnchorSideLeft.Control = PanelSortDirection
+          AnchorSideTop.Control = BitBtnUp
+          AnchorSideTop.Side = asrBottom
+          Left = 0
+          Height = 35
+          Top = 35
+          Width = 104
+          AutoSize = True
+          Caption = 'Left'
+          Constraints.MaxWidth = 104
+          Constraints.MinWidth = 104
+          Margin = 4
+          Images = ImageListSortDirection
+          ImageIndex = 0
+          OnClick = BitBtnLeftClick
+          TabOrder = 0
+        end
+      end
+    end
+    object GroupBoxImageScale: TGroupBox
+      Left = 893
+      Height = 146
+      Top = 0
+      Width = 212
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Image Scale'
+      ChildSizing.EnlargeHorizontal = crsHomogenousSpaceResize
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ClientHeight = 116
+      ClientWidth = 208
+      TabOrder = 3
+      object TrackBarImageScale: TTrackBar
+        Left = 4
+        Height = 40
+        Top = 17
+        Width = 200
+        Frequency = 10
+        Max = 100
+        Min = 1
+        OnChange = TrackBarImageScaleChange
+        Position = 10
+        ShowSelRange = False
+        BorderSpacing.Left = 4
+        BorderSpacing.Right = 4
+        Constraints.MinWidth = 200
+        TabOrder = 0
+      end
+      object LabelScale: TLabel
+        Left = 4
+        Height = 25
+        Top = 74
+        Width = 200
+        Alignment = taCenter
+        Caption = 'LabelScale'
+      end
+    end
+    object RadioGroupViewScale: TRadioGroup
+      Left = 1121
+      Height = 146
+      Top = 0
+      Width = 109
+      AutoFill = True
+      BorderSpacing.Left = 16
+      Caption = 'View Scale'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 116
+      ClientWidth = 105
+      Items.Strings = (
+        '1x'
+        '2x'
+        '3x'
+        '4x'
+      )
+      OnClick = RadioGroupViewScaleClick
+      TabOrder = 4
+    end
+    object RadioGroupSaveScale: TRadioGroup
+      Left = 1234
+      Height = 146
+      Top = 0
+      Width = 107
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Save Scale'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 116
+      ClientWidth = 103
+      Items.Strings = (
+        '1x'
+        '2x'
+        '3x'
+        '4x'
+      )
+      OnClick = RadioGroupSaveScaleClick
+      TabOrder = 5
+    end
+  end
+  object PopupMenuSample: TPopupMenu
+    Images = ImageListSample
+    Left = 440
+    Top = 368
+  end
+  object ImageListSortDirection: TImageList
+    Scaled = True
+    Left = 160
+    Top = 368
+    Bitmap = {
+      4C7A040000001000000010000000CC0000000000000078DAED96311180301004
+      3B242001094888042C2021169080845840021290808454C7AC86AD9849B1E543
+      F27F97BFDE7BDEF7CDF33CB9EF3BD775A5B596F33C731C476AADD9F73DDBB6A5
+      9492755DB32C4BE679CE344DE9A37ED48FFA5FD71BF8B781731BB8B3817E19E8
+      B581391998B1017D18D096015D1AD0B4013F18F092011F1AF0B085EF7016EE43
+      4FE82BB361BE68049DA155F48E67F01DDEC5FFA37ED48FFA7FD7DBB7C360DF4F
+      FB7EDBFD61F797DD9F767FDBFC60F38BCD4F36BFD9FC68F3ABCDCF36BF7FB890
+      F5C8
+    }
+    BitmapAdv = {
+      4C69020000004C7A040000001800000018000000680100000000000078DAEDD9
+      2D0F82601405E04EA441331369D234190D4446B2102934379A8548A049A41049
+      D8B419CD346C44F27187FF7036C30DCF6C67EEE5BD1FE2BAAE589605DFEF179F
+      CF07EFF71BAFD70BCFE713C330A0EB3AB46D8BBAAE71BBDD509625F23CC7E572
+      419AA6389FCF381E8F381C0E88A208611862B7DBC1F77DB8AE8BD5F22DDFF22D
+      DFF22DDFF22DFF0FF395F8DD95782E4A3C73253E4F25DE1525DE4325DE7125D6
+      8F126B538975AFC49EA2C47EA5C45EA8C43EABC41EAEC4F9A0C4D9A3C4B9A6C4
+      99A9C479ACC459AFC43D42893B8A92E338DBA7E7790882603BB3FD7EBF3D9BD3
+      E984388E912409B22C435114B85EAFA8AA0A4DD3E07EBFA3EF7B8CE388C7E3B1
+      CD2BCEDC699A30CFF3B69F58BEE55BBEE55BBEE55BBEE5FF63BE927A7FE3B928
+      F1CC95D4FB3FEF8A92FAF711EFB812EB4789B5A9C4BA57624F5162BF52622F54
+      629F55620F57E27C50E2EC51E25C5352BFDF56BFFFE7AC57E21EA1A4FEFFE807
+      2988691B4C7A040000002000000020000000FE0100000000000078DAEDD7B1AB
+      81611805F0F59649168345596E99A464609041168345268345599445D9944559
+      9445996452261964609092495994C560914919CFEDFC13F72C67F8CDA7EFFBDE
+      EF799FF3F97CF0FD7EF1783CF07C3E71B95C70BD5EB1DFEF71381C703C1EB15A
+      ADB05EAF319BCD309FCF311A8D301E8FD1EBF5D0EFF7D16AB5D06EB751ABD550
+      AFD7512A95502E9791CD6691CBE590CFE7914824904C26118D46118BC5100C06
+      110A85F071BEF39DEF7CE73BDFF9CE77BEF39DEF7CE73BDFF9FF92AFC46757E2
+      7B57E23757E27953E25957E27FA6C47F5C89F34589B34D89735589335D89F789
+      12EF3225DEA34ABCC395B83F28717751E2DEA4C49D4D89FBA212775525EEC94A
+      DCD195D80F94D84D94D88B94D8C994D80795D84595D88395D8C1950281007E7E
+      7E108944100E87118FC7F1FBFB8B4C2683743A8D542A8562B18842A1806AB58A
+      4AA58266B38946A3816EB78B4EA783E17088C16080E9748AC96482E57289C562
+      81DD6E87ED768BCD6683F3F98CD3E984FBFD8EDBED86F7FB8DD7EBE57CE73BDF
+      F9CE77BEF39DEF7CE73BDFF9CE77BEF3FF295F89CFAEC4F7AEC46FAEC4F3A6C4
+      B3AEC4FF4C89FFB812E78B12679B12E7AA1267BA12EF1325DE654ABC47957887
+      2B717F50E2EEA2C4BD49893B9B12F74525EEAA4ADC9395B8A32BB11F28B19B28
+      B11729B19329B10F2AB18B2AB1072BB1832BFD01D72DD74A
+    }
+  end
+  object ImageListSample: TImageList
+    Height = 50
+    Width = 50
+    Left = 600
+    Top = 368
+  end
+  object OpenPictureDialog: TOpenPictureDialog
+    Title = 'Open Existing File'
+    Options = [ofPathMustExist, ofEnableSizing, ofViewDetail]
+    Left = 368
+    Top = 168
+  end
+  object SavePictureDialog: TSavePictureDialog
+    Title = 'Save File As'
+    DefaultExt = '.png'
+    FileName = 'Unnamed'
+    FilterIndex = 2
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 584
+    Top = 168
+  end
+end
