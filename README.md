@@ -4,6 +4,8 @@
 
 Powered By Lazarus (ObjectPascal)
 
+Compiled EXE(Windows): https://github.com/turborium/SortingPixels/raw/main/SortingPixels.exe
+
 Inspired by 
 - https://github.com/kimasendorf/ASDFPixelSort
 - https://ashlynsart.wordpress.com/wp-content/uploads/2018/09/art-120-kim-asendorf.pdf
