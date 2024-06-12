@@ -1,11 +1,11 @@
 object FormMain: TFormMain
   Left = 519
-  Height = 864
+  Height = 896
   Top = 250
   Width = 1410
   BorderWidth = 4
-  Caption = 'Sorting Pixels'
-  ClientHeight = 864
+  Caption = 'Sorting Pixels By Turborium'
+  ClientHeight = 896
   ClientWidth = 1410
   Constraints.MinHeight = 600
   Constraints.MinWidth = 1410
@@ -15,7 +15,7 @@ object FormMain: TFormMain
   Position = poScreenCenter
   object ScrollBoxDisp: TScrollBox
     Left = 12
-    Height = 686
+    Height = 718
     Top = 12
     Width = 1386
     HorzScrollBar.Page = 224
@@ -26,7 +26,7 @@ object FormMain: TFormMain
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
-    ClientHeight = 682
+    ClientHeight = 714
     ClientWidth = 1382
     TabOrder = 0
     object ImageDisp: TImage
@@ -41,7 +41,7 @@ object FormMain: TFormMain
   object PanelParams: TPanel
     Left = 12
     Height = 146
-    Top = 706
+    Top = 738
     Width = 1386
     Align = alBottom
     AutoSize = True
@@ -54,6 +54,7 @@ object FormMain: TFormMain
     ClientHeight = 146
     ClientWidth = 1386
     TabOrder = 1
+    OnResize = PanelParamsResize
     object PanelFile: TPanel
       Left = 0
       Height = 146
@@ -108,7 +109,7 @@ object FormMain: TFormMain
       Top = 0
       Width = 402
       BorderSpacing.Left = 16
-      Caption = 'Trashhold'
+      Caption = 'Treshold'
       ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 3
@@ -385,10 +386,112 @@ object FormMain: TFormMain
       OnClick = RadioGroupSaveScaleClick
       TabOrder = 5
     end
+    object GroupBoxAutoShow: TGroupBox
+      Left = 1345
+      Height = 146
+      Top = 0
+      Width = 258
+      BorderSpacing.Left = 4
+      Caption = 'Auto Show'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ClientHeight = 116
+      ClientWidth = 254
+      TabOrder = 6
+      object PanelAutoShow: TPanel
+        Left = 2
+        Height = 109
+        Top = 4
+        Width = 250
+        AutoSize = True
+        BorderSpacing.Left = 2
+        BorderSpacing.Right = 2
+        BevelOuter = bvNone
+        ClientHeight = 109
+        ClientWidth = 250
+        TabOrder = 0
+        object CheckBoxAutoShowEnabled: TCheckBox
+          AnchorSideLeft.Control = PanelAutoShow
+          AnchorSideTop.Control = PanelAutoShow
+          Left = 0
+          Height = 29
+          Top = 0
+          Width = 66
+          Caption = 'Auto'
+          TabOrder = 0
+          OnChange = CheckBoxAutoShowEnabledChange
+        end
+        object LabelAutoShowMinRange: TLabel
+          AnchorSideLeft.Control = PanelAutoShow
+          AnchorSideTop.Control = TrackBarAutoShowTresholdMin
+          AnchorSideTop.Side = asrCenter
+          Left = 0
+          Height = 25
+          Top = 38
+          Width = 50
+          BorderSpacing.Top = 2
+          Caption = 'Min:'
+          Constraints.MaxWidth = 50
+          Constraints.MinWidth = 50
+        end
+        object TrackBarAutoShowTresholdMin: TTrackBar
+          AnchorSideLeft.Control = LabelAutoShowMinRange
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = CheckBoxAutoShowEnabled
+          AnchorSideTop.Side = asrBottom
+          Left = 50
+          Height = 38
+          Top = 31
+          Width = 200
+          Frequency = 16
+          Max = 255
+          OnChange = TrackBarAutoShowTresholdMinChange
+          PageSize = 1
+          Position = 0
+          ShowSelRange = False
+          BorderSpacing.Top = 2
+          Constraints.MaxHeight = 38
+          Constraints.MinWidth = 200
+          TabOrder = 1
+        end
+        object LabelAutoShowMaxRange: TLabel
+          AnchorSideLeft.Control = PanelAutoShow
+          AnchorSideTop.Control = TrackBarAutoShowTresholdMax
+          AnchorSideTop.Side = asrCenter
+          Left = 0
+          Height = 25
+          Top = 78
+          Width = 50
+          Caption = 'Max:'
+          Constraints.MaxWidth = 50
+          Constraints.MinWidth = 50
+        end
+        object TrackBarAutoShowTresholdMax: TTrackBar
+          AnchorSideLeft.Control = LabelAutoShowMaxRange
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = TrackBarAutoShowTresholdMin
+          AnchorSideTop.Side = asrBottom
+          Left = 50
+          Height = 38
+          Top = 71
+          Width = 200
+          Frequency = 16
+          Max = 255
+          OnChange = TrackBarAutoShowTresholdMaxChange
+          PageSize = 1
+          Position = 0
+          ShowSelRange = False
+          BorderSpacing.Top = 2
+          Constraints.MaxHeight = 38
+          Constraints.MinWidth = 200
+          TabOrder = 2
+        end
+      end
+    end
   end
   object PopupMenuSample: TPopupMenu
     Images = ImageListSample
-    Left = 440
+    Left = 424
     Top = 368
   end
   object ImageListSortDirection: TImageList
@@ -446,7 +549,7 @@ object FormMain: TFormMain
   object OpenPictureDialog: TOpenPictureDialog
     Title = 'Open Existing File'
     Options = [ofPathMustExist, ofEnableSizing, ofViewDetail]
-    Left = 368
+    Left = 360
     Top = 168
   end
   object SavePictureDialog: TSavePictureDialog
@@ -457,5 +560,11 @@ object FormMain: TFormMain
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 584
     Top = 168
+  end
+  object TimerAutoShow: TTimer
+    Interval = 60
+    OnTimer = TimerAutoShowTimer
+    Left = 832
+    Top = 367
   end
 end

@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, UnitMain, BitmapPixels, SortingPixelsAlgorithm
+  Forms, imagesforlazarus, UnitMain, BitmapPixels, SortingPixelsAlgorithm
   { you can add units after this };
 
 {$R *.res}

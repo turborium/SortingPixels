@@ -17,7 +17,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  StdCtrls, Menus, Buttons, ExtDlgs, Math,
+  StdCtrls, Menus, Buttons, ExtDlgs, Math, LazPNG,
   Generics.Defaults, BitmapPixels, SortingPixelsAlgorithm;
 
 type
@@ -52,18 +52,23 @@ type
     ButtonOpen: TButton;
     ButtonOpenSample: TButton;
     ButtonSave: TButton;
+    CheckBoxAutoShowEnabled: TCheckBox;
+    GroupBoxAutoShow: TGroupBox;
     GroupBoxImageScale: TGroupBox;
     GroupBoxSortDirection: TGroupBox;
     GroupBoxTrashhold: TGroupBox;
     ImageDisp: TImage;
     ImageListSample: TImageList;
     ImageListSortDirection: TImageList;
+    LabelAutoShowMaxRange: TLabel;
+    LabelAutoShowMinRange: TLabel;
     LabelThresholdMin: TLabel;
     LabelThresholdMax: TLabel;
     LabelThresholdMaxCaption: TLabel;
     LabelThresholdMinCaption: TLabel;
     LabelScale: TLabel;
     OpenPictureDialog: TOpenPictureDialog;
+    PanelAutoShow: TPanel;
     PanelParams: TPanel;
     PanelFile: TPanel;
     PanelSortDirection: TPanel;
@@ -72,6 +77,9 @@ type
     RadioGroupViewScale: TRadioGroup;
     SavePictureDialog: TSavePictureDialog;
     ScrollBoxDisp: TScrollBox;
+    TimerAutoShow: TTimer;
+    TrackBarAutoShowTresholdMin: TTrackBar;
+    TrackBarAutoShowTresholdMax: TTrackBar;
     TrackBarThresholdMin: TTrackBar;
     TrackBarThresholdMax: TTrackBar;
     TrackBarImageScale: TTrackBar;
@@ -82,11 +90,16 @@ type
     procedure ButtonOpenClick(Sender: TObject);
     procedure ButtonOpenSampleClick(Sender: TObject);
     procedure ButtonSaveClick(Sender: TObject);
+    procedure CheckBoxAutoShowEnabledChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure PanelParamsResize(Sender: TObject);
     procedure RadioGroupSaveScaleClick(Sender: TObject);
     procedure RadioGroupViewScaleClick(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
+    procedure LoadSampleToBitmap(var Bitmap: TBitmap; Index: Integer);
+    procedure TimerAutoShowTimer(Sender: TObject);
+    procedure TrackBarAutoShowTresholdMaxChange(Sender: TObject);
+    procedure TrackBarAutoShowTresholdMinChange(Sender: TObject);
     procedure TrackBarImageScaleChange(Sender: TObject);
     procedure TrackBarThresholdMaxChange(Sender: TObject);
     procedure TrackBarThresholdMinChange(Sender: TObject);
@@ -98,12 +111,20 @@ type
     FViewScale: Integer;
     FImageScale: Integer;
     FSortingDirection: TSortingDirection;
-    FTrashholdMax: Integer;
-    FTrashholdMin: Integer;
+    FTresholdMax: Integer;
+    FTresholdMin: Integer;
     FSaveScale: Integer;
 
     FSortThread: TSortThread;
     FIsNeedUpdate: Boolean;
+
+    FAutoShowEnabled: Boolean;
+    FAutoShowRangeMin: Integer;
+    FAutoShowRangeMax: Integer;
+    FAutoShowDeltaMin: Double;
+    FAutoShowDeltaMax: Double;
+    FAutoShowTresholdMax: Double;
+    FAutoShowTresholdMin: Double;
 
     procedure Idle(Sender: TObject; var Done: Boolean);
     procedure LoadSample(Index: Integer);
@@ -170,12 +191,15 @@ begin
 
   // defaults
   Randomize();
-  FTrashholdMax := 255;
-  FTrashholdMin := 0;
+  FTresholdMax := 255;
+  FTresholdMin := 0;
   FViewScale := 1;
   FImageScale := 100;
   FSaveScale := 3;
   FSortingDirection := TSortingDirection.Up;
+  FAutoShowRangeMin := 0 + 100;
+  FAutoShowRangeMax := 255 - 100;
+  FAutoShowEnabled := False;
 end;
 
 destructor TFormMain.Destroy();
@@ -201,6 +225,11 @@ begin
 
   if FSortThread <> nil then
     FSortThread.WaitFor();
+end;
+
+procedure TFormMain.PanelParamsResize(Sender: TObject);
+begin
+  GroupBoxAutoShow.Visible := GroupBoxAutoShow.Left + GroupBoxAutoShow.Width <= PanelParams.ClientWidth;
 end;
 
 procedure TFormMain.RadioGroupSaveScaleClick(Sender: TObject);
@@ -239,8 +268,8 @@ begin
       FSortThread.Bitmap.LoadFromRawImage(FSource.RawImage, False);
 
       FSortThread.SortingDirection := FSortingDirection;
-      FSortThread.ThresholdMin := FTrashholdMin;
-      FSortThread.ThresholdBright := FTrashholdMax;
+      FSortThread.ThresholdMin := FTresholdMin;
+      FSortThread.ThresholdBright := FTresholdMax;
 
       FSortThread.Start();
 
@@ -265,7 +294,10 @@ procedure TFormMain.ButtonOpenSampleClick(Sender: TObject);
 var
   Item: TMenuItem;
   I: Integer;
+  Bitmap: TBitmap;
+  PopupPoint: TPoint;
 begin
+  // delay loading
   if PopupMenuSample.Items.Count = 0 then
   begin
     Screen.BeginWaitCursor();
@@ -273,7 +305,13 @@ begin
       // load images
       for I := 0 to SampleCount - 1 do
       begin
-        ImageListSample.AddResourceName(HInstance, IntToStr(I));
+        Bitmap := TBitmap.Create();
+        try
+          LoadSampleToBitmap(Bitmap, I);
+          ImageListSample.Add(Bitmap, nil);
+        finally
+          Bitmap.Free();
+        end;
       end;
       // make items
       for I := 0 to SampleCount - 1 do
@@ -289,7 +327,10 @@ begin
       Screen.EndWaitCursor();
     end;
   end;
-  PopupMenuSample.PopUp();
+
+  // popup
+  PopupPoint := ButtonOpenSample.ClientToScreen(Point(ButtonOpenSample.Width, ButtonOpenSample.Height));
+  PopupMenuSample.PopUp(PopupPoint.X, PopupPoint.Y);
 end;
 
 procedure TFormMain.ButtonSaveClick(Sender: TObject);
@@ -316,6 +357,13 @@ begin
       Picture.Free();
     end;
   end;
+
+  NeedUpdate();
+end;
+
+procedure TFormMain.CheckBoxAutoShowEnabledChange(Sender: TObject);
+begin
+  FAutoShowEnabled := CheckBoxAutoShowEnabled.Checked;
 
   NeedUpdate();
 end;
@@ -368,11 +416,6 @@ begin
   NeedUpdate();
 end;
 
-procedure TFormMain.Timer1Timer(Sender: TObject);
-begin
-
-end;
-
 procedure TFormMain.TrackBarImageScaleChange(Sender: TObject);
 begin
   FImageScale := TrackBarImageScale.Position;
@@ -383,28 +426,102 @@ end;
 
 procedure TFormMain.TrackBarThresholdMaxChange(Sender: TObject);
 begin
-  FTrashholdMax := TrackBarThresholdMax.Position;
-  if FTrashholdMin > FTrashholdMax then
-    FTrashholdMin := FTrashholdMax;
+  FTresholdMax := TrackBarThresholdMax.Position;
+  if FTresholdMin > FTresholdMax then
+    FTresholdMin := FTresholdMax;
 
   NeedUpdate();
 end;
 
 procedure TFormMain.TrackBarThresholdMinChange(Sender: TObject);
 begin
-  FTrashholdMin := TrackBarThresholdMin.Position;
-  if FTrashholdMin > FTrashholdMax then
-    FTrashholdMax := FTrashholdMin;
+  FTresholdMin := TrackBarThresholdMin.Position;
+  if FTresholdMin > FTresholdMax then
+    FTresholdMax := FTresholdMin;
+
+  NeedUpdate();
+end;
+
+procedure TFormMain.LoadSampleToBitmap(var Bitmap: TBitmap; Index: Integer);
+var
+  Png: TPNGImage;
+begin
+  Png := TPNGImage.Create();
+  try
+    Png.LoadFromResourceName(HInstance, IntToStr(Index));
+    Bitmap.Assign(Png);
+  finally
+    Png.Free();
+  end;
+end;
+
+procedure TFormMain.TimerAutoShowTimer(Sender: TObject);
+const
+  Vals: array of Double = [-1, -0.8, -0.5, -0.3, 0.3, 0.5, 0.8, 1];
+begin
+
+  if Random(20) = 0 then
+  begin
+    FAutoShowDeltaMin := RandomFrom(Vals);
+  end;
+
+  if Random(20) = 0 then
+  begin
+    FAutoShowDeltaMax := RandomFrom(Vals);
+  end;
+
+  FAutoShowTresholdMin := FAutoShowTresholdMin + FAutoShowDeltaMin;
+  FAutoShowTresholdMax := FAutoShowTresholdMax + FAutoShowDeltaMax;
+
+  if (FAutoShowTresholdMax > 255) or (FAutoShowTresholdMax < FAutoShowRangeMax) then
+  begin
+    FAutoShowDeltaMax := -FAutoShowDeltaMax;
+    if FAutoShowTresholdMax < FAutoShowRangeMax then
+      FAutoShowTresholdMax := FAutoShowRangeMax
+    else
+      FAutoShowTresholdMax := 255;
+  end;
+
+  if (FAutoShowTresholdMin > FAutoShowRangeMin) or (FAutoShowTresholdMin < 0) then
+  begin
+    FAutoShowDeltaMin := -FAutoShowDeltaMin;
+    if FAutoShowTresholdMin > FAutoShowRangeMin then
+      FAutoShowTresholdMin := FAutoShowRangeMin
+    else
+      FAutoShowTresholdMin := 0;
+  end;
+
+  FTresholdMin := Trunc(FAutoShowTresholdMin);
+  FTresholdMax := Trunc(FAutoShowTresholdMax);
+
+  UpdateUI();
+end;
+
+procedure TFormMain.TrackBarAutoShowTresholdMaxChange(Sender: TObject);
+begin
+  FAutoShowRangeMax := TrackBarAutoShowTresholdMax.Position;
+  if FAutoShowRangeMin > FAutoShowRangeMax then
+    FAutoShowRangeMin := FAutoShowRangeMax;
+
+  NeedUpdate();
+end;
+
+procedure TFormMain.TrackBarAutoShowTresholdMinChange(Sender: TObject);
+begin
+  FAutoShowRangeMin := TrackBarAutoShowTresholdMin.Position;
+  if FAutoShowRangeMin > FAutoShowRangeMax then
+    FAutoShowRangeMax := FAutoShowRangeMin;
 
   NeedUpdate();
 end;
 
 procedure TFormMain.LoadSample(Index: Integer);
 begin
-  FTrashholdMax := RandomRange(130, 255);
-  FTrashholdMin := RandomRange(0, 120);
+  FTresholdMax := RandomRange(130, 255);
+  FTresholdMin := RandomRange(0, 120);
   FSortingDirection := TSortingDirection(Random(4));
-  FRawSource.LoadFromResourceName(HInstance, IntToStr(Index));
+  //FRawSource.LoadFromResourceName(HInstance, IntToStr(Index));
+  LoadSampleToBitmap(FRawSource, Index);
   UpdateRawSource();
 end;
 
@@ -477,20 +594,31 @@ begin
   RadioGroupViewScale.ItemIndex := FViewScale - 1;
 
   // update trashhold
-  TrackBarThresholdMin.Position := FTrashholdMin;
-  TrackBarThresholdMax.Position := FTrashholdMax;
+  TrackBarThresholdMin.Position := FTresholdMin;
+  TrackBarThresholdMax.Position := FTresholdMax;
 
   // update save scale
   RadioGroupSaveScale.ItemIndex := FSaveScale - 1;
 
   // threshold labels
-  LabelThresholdMin.Caption := IntToStr(FTrashholdMin);
-  LabelThresholdMax.Caption := IntToStr(FTrashholdMax);
+  LabelThresholdMin.Caption := IntToStr(FTresholdMin);
+  LabelThresholdMax.Caption := IntToStr(FTresholdMax);
+
+  // auto show
+  CheckBoxAutoShowEnabled.Checked := FAutoShowEnabled;
+  TrackBarAutoShowTresholdMin.Position := FAutoShowRangeMin;
+  TrackBarAutoShowTresholdMax.Position := FAutoShowRangeMax;
+  TrackBarThresholdMax.Enabled := not FAutoShowEnabled;
+  TrackBarThresholdMin.Enabled := not FAutoShowEnabled;
+  RadioGroupSaveScale.Enabled := not FAutoShowEnabled;
+  ButtonSave.Enabled := not FAutoShowEnabled;
 end;
 
 procedure TFormMain.NeedUpdate();
 begin
   FIsNeedUpdate := True;
+
+  TimerAutoShow.Enabled := FAutoShowEnabled;
 
   UpdateUI();
 end;

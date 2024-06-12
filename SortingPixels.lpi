@@ -9,26 +9,23 @@
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <XPManifest>
-        <DpiAware Value="True"/>
-      </XPManifest>
       <Icon Value="0"/>
       <Resources Count="15">
-        <Resource_0 FileName="samples\1.bmp" Type="BITMAP" ResourceName="1"/>
-        <Resource_1 FileName="samples\2.bmp" Type="BITMAP" ResourceName="2"/>
-        <Resource_2 FileName="samples\3.bmp" Type="BITMAP" ResourceName="3"/>
-        <Resource_3 FileName="samples\4.bmp" Type="BITMAP" ResourceName="4"/>
-        <Resource_4 FileName="samples\5.bmp" Type="BITMAP" ResourceName="5"/>
-        <Resource_5 FileName="samples\6.bmp" Type="BITMAP" ResourceName="6"/>
-        <Resource_6 FileName="samples\7.bmp" Type="BITMAP" ResourceName="7"/>
-        <Resource_7 FileName="samples\8.bmp" Type="BITMAP" ResourceName="8"/>
-        <Resource_8 FileName="samples\9.bmp" Type="BITMAP" ResourceName="9"/>
-        <Resource_9 FileName="samples\10.bmp" Type="BITMAP" ResourceName="10"/>
-        <Resource_10 FileName="samples\11.bmp" Type="BITMAP" ResourceName="11"/>
-        <Resource_11 FileName="samples\12.bmp" Type="BITMAP" ResourceName="12"/>
-        <Resource_12 FileName="samples\0.bmp" Type="BITMAP" ResourceName="0"/>
-        <Resource_13 FileName="samples\13.bmp" Type="BITMAP" ResourceName="13"/>
-        <Resource_14 FileName="samples\14.bmp" Type="BITMAP" ResourceName="14"/>
+        <Resource_0 FileName="samples\0.png" Type="RCDATA" ResourceName="0"/>
+        <Resource_1 FileName="samples\1.png" Type="RCDATA" ResourceName="1"/>
+        <Resource_2 FileName="samples\2.png" Type="RCDATA" ResourceName="2"/>
+        <Resource_3 FileName="samples\3.png" Type="RCDATA" ResourceName="3"/>
+        <Resource_4 FileName="samples\4.png" Type="RCDATA" ResourceName="4"/>
+        <Resource_5 FileName="samples\5.png" Type="RCDATA" ResourceName="5"/>
+        <Resource_6 FileName="samples\6.png" Type="RCDATA" ResourceName="6"/>
+        <Resource_7 FileName="samples\7.png" Type="RCDATA" ResourceName="7"/>
+        <Resource_8 FileName="samples\8.png" Type="RCDATA" ResourceName="8"/>
+        <Resource_9 FileName="samples\9.png" Type="RCDATA" ResourceName="9"/>
+        <Resource_10 FileName="samples\10.png" Type="RCDATA" ResourceName="10"/>
+        <Resource_11 FileName="samples\11.png" Type="RCDATA" ResourceName="11"/>
+        <Resource_12 FileName="samples\12.png" Type="RCDATA" ResourceName="12"/>
+        <Resource_13 FileName="samples\13.png" Type="RCDATA" ResourceName="13"/>
+        <Resource_14 FileName="samples\14.png" Type="RCDATA" ResourceName="14"/>
       </Resources>
     </General>
     <BuildModes>
@@ -125,6 +122,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="imagesforlazarus"/>
+      </Item>
+      <Item>
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>
@@ -176,4 +176,17 @@
       </CompilerMessages>
     </Other>
   </CompilerOptions>
+  <Debugging>
+    <Exceptions>
+      <Item>
+        <Name Value="EAbort"/>
+      </Item>
+      <Item>
+        <Name Value="ECodetoolError"/>
+      </Item>
+      <Item>
+        <Name Value="EFOpenError"/>
+      </Item>
+    </Exceptions>
+  </Debugging>
 </CONFIG>
