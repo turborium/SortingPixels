@@ -9,6 +9,9 @@
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
       <Icon Value="0"/>
       <Resources Count="15">
         <Resource_0 FileName="samples\0.png" Type="RCDATA" ResourceName="0"/>
