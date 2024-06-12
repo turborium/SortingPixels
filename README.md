@@ -2,7 +2,7 @@
 
 ![scr](scr.png)
 
-Powered By Lazarus (ObjectPascal)
+Powered By Lazarus (ObjectPascal) and [✅GDD Methodology✅](https://github.com/turborium/gdd)
 
 Compiled EXE(Windows): https://github.com/turborium/SortingPixels/raw/main/SortingPixels.exe
 
