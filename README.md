@@ -1,5 +1,7 @@
 # SortingPixels
 
+[Powered By Lazarus (ObjectPascal)](https://www.lazarus-ide.org/)  
+
 ![scr](scr.png)
 
 Powered By Lazarus (ObjectPascal) and [✅GDD Methodology✅](https://github.com/turborium/gdd)
